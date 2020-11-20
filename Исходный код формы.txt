@@ -1,0 +1,84 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace NeuronWF
+{
+    public partial class Form1 : Form
+    {
+        Neuron neuron = new Neuron();
+        MB mb = new MB();
+        decimal actual_weight;
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (label2.Text == "False")
+            {
+               
+                int i = 0;
+                do
+                {
+                    i++;
+                    neuron.Train(1, 0.621371m);
+
+                }while(neuron.LastError >= neuron.Smoothing);
+                label2.Text = "True";
+                mb.Information( "Neuron complete his training", "Complete!");
+                actual_weight = neuron.get_weight();
+            }
+            else if (label2.Text == "True")
+            {
+               mb.Warning("Training already completed!", "Caution!");
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Neuron neuron = new Neuron();
+                if (label2.Text == "True")
+                {
+                    neuron.set_weight(actual_weight);
+                    decimal a = neuron.ProcessInputData(Convert.ToDecimal(textBox1.Text));
+                    decimal b = neuron.RestoreInputData(Convert.ToDecimal(textBox2.Text));
+
+
+                    label5.Text = Convert.ToString(Math.Round(a, 4));
+                    label6.Text = Convert.ToString(Math.Round(b, 4));
+                }
+                else if (label2.Text == "False")
+                {
+                    mb.Warning("Neuron does not complite training!", "Caution!");
+                }
+            }
+            catch (FormatException) 
+            {
+                mb.Error("Wrong input!", "Format exception!");
+            }
+        }
+        private void button3_Click(object sender, EventArgs e)
+        {
+            label5.Text = "";
+            label6.Text = "";
+            textBox1.Text = "";
+            textBox2.Text = "";
+        }
+    }
+}
